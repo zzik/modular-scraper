@@ -1,35 +1,35 @@
 async function scrapeJobData(page) {
-    const jobList = await page.evaluate(() => {
-        const jobData = window.mosaic.providerData["mosaic-provider-jobcards"].metaData
-            .mosaicProviderJobCardsModel.results;
+  const jobList = await page.evaluate(() => {
+    const jobData =
+      window.mosaic.providerData["mosaic-provider-jobcards"].metaData
+        .mosaicProviderJobCardsModel.results;
 
-        return jobData.map((job) => ({
-            company: job.company,
-            companyRating: job.companyRating,
-            companyReviewCount: job.companyReviewCount,
-            companyOverviewLink: job.companyOverviewLink,
-            createDate: job.createDate,
-            displayTitle: job.displayTitle,
-            extractedSalary: job.extractedSalary,
-            formattedLocation: job.formattedLocation,
-            formattedRelativeTime: job.formattedRelativeTime,
-            highQualityMarketplace: job.highQualityMarketplace,
-            highVolumeHiringModel: job.highVolumeHiringModel,
-            jobCardRequirementsModel: job.jobCardRequirementsModel,
-            jobLocationCity: job.jobLocationCity,
-            jobLocationExtras: job.jobLocationExtras,
-            jobLocationPostal: job.jobLocationPostal,
-            jobLocationState: job.jobLocationState,
-            jobkey: job.jobkey,
-            newJob: job.newJob,
-            normTitle: job.normTitle,
-            salarySnippet: job.salarySnippet,
-            taxonomyAttributes: job.taxonomyAttributes,
-            title: job.title,
-        }));
-    });
+    return jobData.map((job) => ({
+      name: job.company,
+      score: job.companyRating,
+      count: job.companyReviewCount,
+      link: job.companyOverviewLink,
+      createdAt: job.createDate,
+      fresh: job.newJob,
+      key: job.jobkey,
+      benefits: job.taxonomyAttributes.find((el) => el.label === "benefits").attributes.map((benefit) => benefit.label),
+      title: job.title,
+      displayTitle: job.displayTitle,
+      normTitle: job.normTitle,
+      salaryText: job.salarySnippet.text,
+      salaryMin: job.extractedSalary?.min,
+      salaryMax: job.extractedSalary?.max,
+      salaryType: job.extractedSalary?.type,
+      schedule: job.taxonomyAttributes.find((el) => el.label === "schedules").attributes.map((schedule) => schedule.label),
+      jobTypes: job.taxonomyAttributes.find((el) => el.label === "job-types").attributes.map((jobType) => jobType.label),
+      shifts: job.taxonomyAttributes.find((el) => el.label === "shifts").attributes.map((shift) => shift.label),
+      city: job.jobLocationCity,
+      zip: job.jobLocationPostal,
+      state: job.jobLocationState,
+    }));
+  });
 
-    return jobList;
+  return jobList;
 }
 
 module.exports = scrapeJobData;

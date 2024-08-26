@@ -17,6 +17,7 @@ const { initializeDatabase, saveJobData } = require('./app/db');
 
     // Save job data to the database
     saveJobData(db, jobData);
+    console.log(jobData)
 
     await browser.close();
 })();
